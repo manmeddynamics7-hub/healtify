@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Heart, ThumbsUp, Share2, BookOpen, Activity, Brain, Utensils, Shield } from 'lucide-react';
+import api from '../../services/api';
 
 const HealthTipsSection = () => {
   const [healthTips, setHealthTips] = useState([]);
@@ -10,10 +11,9 @@ const HealthTipsSection = () => {
   useEffect(() => {
     const fetchHealthTips = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/admin/health-tips/active?category=${selectedCategory}`);
-        if (response.ok) {
-          const data = await response.json();
-          setHealthTips(data);
+        const response = await api.get(`/admin/health-tips/active?category=${selectedCategory}`);
+        if (response.data && response.data.length > 0) {
+          setHealthTips(response.data);
         } else {
           // Fallback to sample data if API fails
           const fallbackHealthTips = [
@@ -76,26 +76,21 @@ const HealthTipsSection = () => {
     : healthTips.filter(tip => tip.category === selectedCategory);
 
   const handleLike = async (tipId) => {
-    try {
-      const response = await fetch(`http://localhost:5000/api/admin/health-tips/${tipId}/like`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+    // Optimistic UI update
+    setHealthTips(prev => prev.map(tip =>
+      tip.id === tipId ? { ...tip, likes: tip.likes + 1 } : tip
+    ));
 
-      if (response.ok) {
-        // Update local state
-        setHealthTips(prev => prev.map(tip => 
-          tip.id === tipId ? { ...tip, likes: tip.likes + 1 } : tip
-        ));
-      }
+    try {
+      await api.post(`/admin/health-tips/${tipId}/like`);
+      // No need to update state again if API call is successful
     } catch (error) {
       console.error('Error liking health tip:', error);
-      // Still update UI for better UX
+      // Revert the state if API call fails
       setHealthTips(prev => prev.map(tip => 
-        tip.id === tipId ? { ...tip, likes: tip.likes + 1 } : tip
+        tip.id === tipId ? { ...tip, likes: tip.likes - 1 } : tip
       ));
+      // Optionally: show a toast notification to the user
     }
   };
 

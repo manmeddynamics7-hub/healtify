@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star, Quote, ChevronLeft, ChevronRight, Award, TrendingUp, Heart } from 'lucide-react';
+import api from '../../services/api';
 
 const SuccessStoriesSection = () => {
   const [successStories, setSuccessStories] = useState([]);
@@ -10,10 +11,9 @@ const SuccessStoriesSection = () => {
   useEffect(() => {
     const fetchSuccessStories = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/admin/success-stories/active');
-        if (response.ok) {
-          const data = await response.json();
-          setSuccessStories(data);
+        const response = await api.get('/admin/success-stories/active');
+        if (response.data && response.data.length > 0) {
+          setSuccessStories(response.data);
         } else {
           // Fallback to sample data if API fails
           const fallbackStories = [

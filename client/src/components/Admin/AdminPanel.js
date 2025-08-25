@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import AnimatedSection from '../shared/AnimatedSection';
 import PageBackground from '../shared/PageBackground';
+import api from '../../services/api';
 
 const AdminPanel = () => {
   const { user, userProfile } = useUser();
@@ -53,53 +54,18 @@ const AdminPanel = () => {
     try {
       setLoading(true);
       
-      // Fetch admin statistics
-      const statsResponse = await fetch('http://localhost:5000/api/admin/stats', {
-        headers: {
-          'Authorization': `Bearer ${await user.getIdToken()}`
-        }
-      });
-      
-      if (statsResponse.ok) {
-        const statsData = await statsResponse.json();
-        setStats(statsData);
-      }
+      // Fetch all admin data in parallel
+      const [statsRes, usersRes, announcementsRes, healthTipsRes] = await Promise.all([
+        api.get('/admin/stats'),
+        api.get('/admin/users'),
+        api.get('/admin/announcements'),
+        api.get('/admin/health-tips')
+      ]);
 
-      // Fetch users
-      const usersResponse = await fetch('http://localhost:5000/api/admin/users', {
-        headers: {
-          'Authorization': `Bearer ${await user.getIdToken()}`
-        }
-      });
-      
-      if (usersResponse.ok) {
-        const usersData = await usersResponse.json();
-        setUsers(usersData);
-      }
-
-      // Fetch announcements
-      const announcementsResponse = await fetch('http://localhost:5000/api/admin/announcements', {
-        headers: {
-          'Authorization': `Bearer ${await user.getIdToken()}`
-        }
-      });
-      
-      if (announcementsResponse.ok) {
-        const announcementsData = await announcementsResponse.json();
-        setAnnouncements(announcementsData);
-      }
-
-      // Fetch health tips
-      const healthTipsResponse = await fetch('http://localhost:5000/api/admin/health-tips', {
-        headers: {
-          'Authorization': `Bearer ${await user.getIdToken()}`
-        }
-      });
-      
-      if (healthTipsResponse.ok) {
-        const healthTipsData = await healthTipsResponse.json();
-        setHealthTips(healthTipsData);
-      }
+      if (statsRes.data) setStats(statsRes.data);
+      if (usersRes.data) setUsers(usersRes.data);
+      if (announcementsRes.data) setAnnouncements(announcementsRes.data);
+      if (healthTipsRes.data) setHealthTips(healthTipsRes.data);
 
     } catch (error) {
       console.error('Error fetching admin data:', error);

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Bell, Calendar, Info, AlertTriangle, Megaphone } from 'lucide-react';
+import api from '../../services/api';
 
 const AnnouncementBanner = () => {
   const [announcements, setAnnouncements] = useState([]);
@@ -11,12 +12,11 @@ const AnnouncementBanner = () => {
   useEffect(() => {
     const fetchAnnouncements = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/admin/announcements/active');
-        if (response.ok) {
-          const data = await response.json();
-          setAnnouncements(data);
+        const response = await api.get('/admin/announcements/active');
+        if (response.data && response.data.length > 0) {
+          setAnnouncements(response.data);
         } else {
-          // Fallback to sample data if API fails
+          // Fallback to sample data if API returns no data
           const fallbackAnnouncements = [
             {
               id: 1,
@@ -33,7 +33,7 @@ const AnnouncementBanner = () => {
         }
       } catch (error) {
         console.error('Error fetching announcements:', error);
-        // Fallback to sample data
+        // Fallback to sample data on error
         const fallbackAnnouncements = [
           {
             id: 1,
