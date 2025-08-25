@@ -61,7 +61,7 @@ router.get('/announcements/active', async (req, res) => {
     res.json(announcements);
   } catch (error) {
     console.error('Error fetching active announcements:', error);
-    res.status(500).json({ error: error.message, stack: error.stack });
+    res.status(500).json({ error: 'Failed to fetch active announcements' });
   }
 });
 
@@ -151,7 +151,7 @@ router.get('/health-tips/active', async (req, res) => {
     res.json(tips);
   } catch (error) {
     console.error('Error fetching active health tips:', error);
-    res.status(500).json({ error: error.message, stack: error.stack });
+    res.status(500).json({ error: 'Failed to fetch active health tips' });
   }
 });
 
@@ -174,7 +174,7 @@ router.get('/success-stories/active', async (req, res) => {
     res.json(stories);
   } catch (error) {
     console.error('Error fetching active success stories:', error);
-    res.status(500).json({ error: error.message, stack: error.stack });
+    res.status(500).json({ error: 'Failed to fetch active success stories' });
   }
 });
 
