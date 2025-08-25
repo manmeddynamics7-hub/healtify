@@ -53,6 +53,20 @@ service cloud.firestore {
     match /marketingConsent/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
+
+    // Publicly readable content managed by admin
+    match /announcements/{docId} {
+      allow read: if request.auth != null;
+    }
+    match /healthTips/{docId} {
+      allow read: if request.auth != null;
+    }
+    match /successStories/{docId} {
+      allow read: if request.auth != null;
+    }
+    match /updates/{docId} {
+      allow read: if request.auth != null;
+    }
     
     // Default fallback rule for anything else (deny all)
     match /{document=**} {
