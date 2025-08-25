@@ -13,6 +13,12 @@ service cloud.firestore {
       allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
     }
     
+    // Users can read/write their own daily health metrics (water, steps, sleep)
+    match /dailyHealthMetrics/{metricId} {
+      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
+    }
+
     // Users can read/write their own health metrics
     match /healthMetrics/{metricId} {
       allow read, write: if request.auth != null && resource.data.userId == request.auth.uid;
