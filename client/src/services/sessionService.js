@@ -8,7 +8,7 @@ class SessionService {
     this.isActive = false;
     this.activityTimer = null;
     this.heartbeatInterval = null;
-    this.API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+    this.API_BASE = (process.env.REACT_APP_API_URL || 'http://localhost:5000/api').replace(/\/$/, '');
   }
 
   // Start a new session
