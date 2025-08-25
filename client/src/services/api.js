@@ -10,17 +10,28 @@ const api = axios.create({
   },
 });
 
-// Request interceptor to add auth token
+// Request interceptor to add auth token and admin key
 api.interceptors.request.use(
   async (config) => {
     try {
+      // Add Firebase auth token
       const user = auth.currentUser;
       if (user) {
         const token = await user.getIdToken();
         config.headers.Authorization = `Bearer ${token}`;
       }
+
+      // Add Admin API key for admin routes
+      if (config.url && config.url.includes('/admin')) {
+        const adminKey = process.env.REACT_APP_ADMIN_API_KEY;
+        if (adminKey) {
+          config.headers['x-admin-api-key'] = adminKey;
+        } else {
+          console.warn('Admin API key is missing for an admin route request.');
+        }
+      }
     } catch (error) {
-      console.error('Error getting auth token:', error);
+      console.error('Error in request interceptor:', error);
     }
     return config;
   },

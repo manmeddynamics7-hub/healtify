@@ -53,9 +53,9 @@ function AppContent() {
     if (!loading) {
       if (isAuthenticated && user) {
         // Start session tracking for authenticated users
-        if (user.uid) {
-          sessionService.startSession(user.uid);
-        }
+        // if (user.uid) {
+        //   sessionService.startSession(user.uid);
+        // }
         
         // Check if we have a user profile
         if (userProfile) {
@@ -83,20 +83,20 @@ function AppContent() {
   const handleAuthSuccess = async (authResult) => {
     // authResult has { user, profile } structure
     
-    // Start user session tracking
-    try {
-      if (authResult.user && authResult.user.uid) {
-        const deviceInfo = `${navigator.platform} - ${navigator.userAgent.split(' ')[0]}`;
-        await sessionService.startSession(authResult.user.uid, {
-          deviceInfo,
-          ipAddress: 'client-side' // Will be determined by backend
-        });
-        console.log('User session started for:', authResult.user.uid);
-      }
-    } catch (error) {
-      console.error('Failed to start user session:', error);
-      // Don't block login if session tracking fails
-    }
+    // Start user session tracking (Temporarily disabled)
+    // try {
+    //   if (authResult.user && authResult.user.uid) {
+    //     const deviceInfo = `${navigator.platform} - ${navigator.userAgent.split(' ')[0]}`;
+    //     await sessionService.startSession(authResult.user.uid, {
+    //       deviceInfo,
+    //       ipAddress: 'client-side' // Will be determined by backend
+    //     });
+    //     console.log('User session started for:', authResult.user.uid);
+    //   }
+    // } catch (error) {
+    //   console.error('Failed to start user session:', error);
+    //   // Don't block login if session tracking fails
+    // }
     
     if (!authResult.profile || !authResult.profile.isProfileComplete) {
       setCurrentPage('onboarding');
