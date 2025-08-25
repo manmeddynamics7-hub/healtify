@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api from './api';
 import { createOptimizedInterval /* throttle */ } from '../utils/performanceUtils';
 
 class SessionService {
@@ -8,7 +8,6 @@ class SessionService {
     this.isActive = false;
     this.activityTimer = null;
     this.heartbeatInterval = null;
-    this.API_BASE = (process.env.REACT_APP_API_URL || 'http://localhost:5000/api').replace(/\/$/, '');
   }
 
   // Start a new session
@@ -16,13 +15,9 @@ class SessionService {
     try {
       this.userId = userId;
       
-      const response = await axios.post(`${this.API_BASE}/admin/users/${userId}/session/start`, {
+      const response = await api.post(`/admin/users/${userId}/session/start`, {
         deviceInfo: additionalData.deviceInfo || navigator.userAgent,
         ipAddress: additionalData.ipAddress || await this.getClientIP()
-      }, {
-        headers: {
-          'x-admin-api-key': 'rainscare_admin_key_2024'
-        }
       });
 
       if (response.data.sessionId) {
@@ -48,11 +43,7 @@ class SessionService {
     if (!this.sessionId || !this.userId) return;
 
     try {
-      await axios.put(`${this.API_BASE}/admin/users/${this.userId}/session/${this.sessionId}/end`, {}, {
-        headers: {
-          'x-admin-api-key': 'rainscare_admin_key_2024'
-        }
-      });
+      await api.put(`/admin/users/${this.userId}/session/${this.sessionId}/end`);
       
       this.cleanup();
       console.log('Session ended:', this.sessionId);
@@ -66,11 +57,7 @@ class SessionService {
     if (!this.sessionId || !this.userId || !this.isActive) return;
 
     try {
-      await axios.put(`${this.API_BASE}/admin/users/${this.userId}/session/${this.sessionId}/activity`, {}, {
-        headers: {
-          'x-admin-api-key': 'rainscare_admin_key_2024'
-        }
-      });
+      await api.put(`/admin/users/${this.userId}/session/${this.sessionId}/activity`);
     } catch (error) {
       console.error('Error updating session activity:', error);
     }
