@@ -6,14 +6,19 @@ const SuccessStoriesSection = () => {
   const [successStories, setSuccessStories] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
+import api from '../../services/api';
+
+// ... (rest of the imports)
+
+// ...
+
   // Fetch success stories from API
   useEffect(() => {
     const fetchSuccessStories = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/admin/success-stories/active');
-        if (response.ok) {
-          const data = await response.json();
-          setSuccessStories(data);
+        const response = await api.get('/admin/success-stories/active');
+        if (response.data && response.data.length > 0) {
+          setSuccessStories(response.data);
         } else {
           // Fallback to sample data if API fails
           const fallbackStories = [

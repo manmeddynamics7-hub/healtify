@@ -86,13 +86,13 @@ const MovingUpdatesCards = () => {
 
   const fetchUpdates = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/updates/active');
-      if (response.ok) {
-        const data = await response.json();
-        setUpdates(data);
+      const response = await api.get('/updates/active');
+      if (response.data && response.data.length > 0) {
+        setUpdates(response.data);
       }
     } catch (error) {
       console.error('Error fetching updates:', error);
+      // Don't fallback to quotes, just show nothing if API fails
     } finally {
       setLoading(false);
     }

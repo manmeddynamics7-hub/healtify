@@ -7,16 +7,21 @@ const AnnouncementBanner = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
 
+import api from '../../services/api';
+
+// ... (rest of the imports)
+
+// ...
+
   // Fetch announcements from API
   useEffect(() => {
     const fetchAnnouncements = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/admin/announcements/active');
-        if (response.ok) {
-          const data = await response.json();
-          setAnnouncements(data);
+        const response = await api.get('/admin/announcements/active');
+        if (response.data && response.data.length > 0) {
+          setAnnouncements(response.data);
         } else {
-          // Fallback to sample data if API fails
+          // Fallback to sample data if API returns no data
           const fallbackAnnouncements = [
             {
               id: 1,
@@ -33,7 +38,7 @@ const AnnouncementBanner = () => {
         }
       } catch (error) {
         console.error('Error fetching announcements:', error);
-        // Fallback to sample data
+        // Fallback to sample data on error
         const fallbackAnnouncements = [
           {
             id: 1,
