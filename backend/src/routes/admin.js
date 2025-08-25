@@ -132,6 +132,52 @@ router.post('/announcements/:id/view', async (req, res) => {
   }
 });
 
+// ==================== HEALTH TIPS ====================
+
+// Get active health tips for frontend
+router.get('/health-tips/active', async (req, res) => {
+  try {
+    const snapshot = await db.collection(COLLECTIONS.HEALTH_TIPS)
+      .where('isActive', '==', true)
+      .orderBy('createdAt', 'desc')
+      .limit(5)
+      .get();
+
+    const tips = [];
+    snapshot.forEach(doc => {
+      tips.push({ id: doc.id, ...doc.data() });
+    });
+
+    res.json(tips);
+  } catch (error) {
+    console.error('Error fetching active health tips:', error);
+    res.status(500).json({ error: 'Failed to fetch active health tips' });
+  }
+});
+
+// ==================== SUCCESS STORIES ====================
+
+// Get active success stories for frontend
+router.get('/success-stories/active', async (req, res) => {
+  try {
+    const snapshot = await db.collection(COLLECTIONS.SUCCESS_STORIES)
+      .where('isActive', '==', true)
+      .orderBy('createdAt', 'desc')
+      .limit(5)
+      .get();
+
+    const stories = [];
+    snapshot.forEach(doc => {
+      stories.push({ id: doc.id, ...doc.data() });
+    });
+
+    res.json(stories);
+  } catch (error) {
+    console.error('Error fetching active success stories:', error);
+    res.status(500).json({ error: 'Failed to fetch active success stories' });
+  }
+});
+
 // ==================== UPDATES ====================
 
 // Get all updates
