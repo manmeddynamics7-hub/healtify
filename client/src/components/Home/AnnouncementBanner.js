@@ -1,17 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Bell, Calendar, Info, AlertTriangle, Megaphone } from 'lucide-react';
+import api from '../../services/api';
 
 const AnnouncementBanner = () => {
   const [announcements, setAnnouncements] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
-
-import api from '../../services/api';
-
-// ... (rest of the imports)
-
-// ...
 
   // Fetch announcements from API
   useEffect(() => {

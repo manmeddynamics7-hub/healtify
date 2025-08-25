@@ -1,16 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star, Quote, ChevronLeft, ChevronRight, Award, TrendingUp, Heart } from 'lucide-react';
+import api from '../../services/api';
 
 const SuccessStoriesSection = () => {
   const [successStories, setSuccessStories] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-
-import api from '../../services/api';
-
-// ... (rest of the imports)
-
-// ...
 
   // Fetch success stories from API
   useEffect(() => {

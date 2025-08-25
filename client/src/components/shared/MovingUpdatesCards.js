@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Zap, Heart, Award, Info, Calendar, Clock, ChevronLeft, ChevronRight } from 'lucide-react';
+import api from '../../services/api';
 
 const MovingUpdatesCards = () => {
   const [updates, setUpdates] = useState([]);

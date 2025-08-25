@@ -1,16 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Heart, ThumbsUp, Share2, BookOpen, Activity, Brain, Utensils, Shield } from 'lucide-react';
+import api from '../../services/api';
 
 const HealthTipsSection = () => {
   const [healthTips, setHealthTips] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('all');
-
-import api from '../../services/api';
-
-// ... (rest of the imports)
-
-// ...
 
   // Fetch health tips from API
   useEffect(() => {

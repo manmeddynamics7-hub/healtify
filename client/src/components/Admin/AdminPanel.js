@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import AnimatedSection from '../shared/AnimatedSection';
 import PageBackground from '../shared/PageBackground';
+import api from '../../services/api';
 
 const AdminPanel = () => {
   const { user, userProfile } = useUser();
@@ -48,12 +49,6 @@ const AdminPanel = () => {
       fetchAdminData();
     }
   }, [isAdmin]);
-
-import api from '../../services/api';
-
-// ... (rest of the imports)
-
-// ...
 
   const fetchAdminData = async () => {
     try {
